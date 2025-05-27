@@ -12,7 +12,7 @@ using namespace std;
 //untuk generate random numbers
 random_device rd;  
 mt19937 gen(rd()); 
-uniform_int_distribution<> high(60, 80), medium(30, 60), low(10, 30), codeRange(0,300);
+uniform_int_distribution<> high(60, 80), medium(30, 60), low(10, 30), codeRange(0,100);
 // Contoh implementasi -> high(gen)
 
 struct boss{
@@ -33,6 +33,7 @@ struct regulerEnemy{
 };
 
 class Item{
+    //akan ada 5 jenis item
     private:
         string name;
         int price;
@@ -51,18 +52,41 @@ class Item{
 };
 
 
-//Lanjutkan untuk class Inventory nanti
-/*
-    class Inventory{
+
+
+class Inventory{
+    //total inventory slot bisa 25
     private:
-        Item items[300] = {Item("", 0, 0, 0, 0)};
+        Item items[25];
 
     public:
         int hashFunction(Item items) const{
-            return items.getItemCode() % 300;
+            return items.getItemCode() % 25;
         }
+
+        void addItem(const Item& item) {
+            int index = hashFunction(item);
+            // Cek apakah slot sudah terisi
+            while (!items[index].getName().empty()) {
+                index = (index + 1) % 25; // Linear probing
+            }
+            items[index] = item;
+        }
+
+        void removeItem(int itemCode) {
+            int index = itemCode % 25;
+            // Cek apakah item ada di slot tersebut
+            while (!items[index].getName().empty()) {
+                if (items[index].getItemCode() == itemCode) {
+                    items[index] = Item("", 0, 0, 0, 0); // Menghapus item dengan mengosongkan slot
+                    return;
+                }
+                index = (index + 1) % 25; // Linear probing
+            }
+        }
+
 };
-*/
+
 
 
 int main(){
